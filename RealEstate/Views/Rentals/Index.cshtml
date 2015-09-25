@@ -17,6 +17,7 @@
         <th>
             @Html.DisplayNameFor(model => model.Price)
         </th>
+        <th>Last Adjustment</th>
         <th></th>
     </tr>
 
@@ -35,6 +36,10 @@
             @Html.DisplayFor(modelItem => item.Price)
         </td>
         <td>
+            @(item.Adjustments == null ? string.Empty : item.Adjustments.Select(a => a.Describe()).LastOrDefault())
+        </td>
+        <td>
+            @Html.ActionLink("Adjust Price", "AdjustPrice", new { id = item.Id }) |
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.Id })

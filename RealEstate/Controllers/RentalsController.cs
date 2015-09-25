@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using RealEstate.App_Start;
 using RealEstate.Models;
 using System;
@@ -18,11 +19,10 @@ namespace RealEstate.Controllers
         {
             List<Rental> rentals = new List<Rental>();
             var filter = new BsonDocument();
-            //var task = Context.Rentals.FindAsync<Rental>(filter);
-            //task.Wait();
+
             using (var cursor = await Context.Rentals.FindAsync<Rental>(filter))
             {
-                
+
                 while (await cursor.MoveNextAsync())
                 {
                     var batch = cursor.Current;
@@ -46,6 +46,28 @@ namespace RealEstate.Controllers
             var rental = new Rental(postRental);
             Context.Rentals.InsertOneAsync(rental);
             return RedirectToAction("index");
+        }
+
+        public async Task<ActionResult> AdjustPrice(string id)
+        {
+            var rental = await GetRental(id);
+            return View(rental);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AdjustPrice(string id, AdjustPrice adjustPrice)
+        {
+            var rental = await GetRental(id);
+            rental.AdjustPrice(adjustPrice);
+
+            await Context.Rentals.ReplaceOneAsync<Rental>(r => r.Id == id, rental);
+            return RedirectToAction("index");
+        }
+
+        private async Task<Rental> GetRental(string id)
+        {
+            var rental = await Context.Rentals.Find(r => r.Id == id).FirstOrDefaultAsync();
+            return rental;
         }
     }
 }
