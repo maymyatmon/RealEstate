@@ -12,7 +12,7 @@ namespace RealEstate.Models
         //Need default constructor so that Mongo can deserialize Rental model
         public Rental()
         {
-            Adjustments = new List<PriceAdjustment>();
+
         }
         public Rental(PostRental postRental)
         {
@@ -25,10 +25,6 @@ namespace RealEstate.Models
         public void AdjustPrice(AdjustPrice adjustPrice)
         {
             var adjustment = new PriceAdjustment(adjustPrice, Price);
-            if(Adjustments == null)
-            {
-                Adjustments = new List<PriceAdjustment>();
-            }
             Adjustments.Add(adjustment);
             Price = adjustment.NewPrice;
         }
@@ -44,6 +40,6 @@ namespace RealEstate.Models
         [BsonRepresentation(BsonType.Double)]
         public decimal Price { get; set; }
 
-        public List<PriceAdjustment> Adjustments { get; set; }
+        public List<PriceAdjustment> Adjustments = new List<PriceAdjustment>();
     }
 }

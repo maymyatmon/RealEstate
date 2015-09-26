@@ -17,22 +17,27 @@ namespace RealEstate.Controllers
 
         public async Task<ActionResult> Index()
         {
-            List<Rental> rentals = new List<Rental>();
-            var filter = new BsonDocument();
+            //var searchFilter = Builders<Rental>.Filter.Gte(r => r.Price, 10000);
+            //List<Rental> rentalList = await Context.Rentals.Find<Rental>(searchFilter).ToListAsync();
+            List<Rental> rentalList = await Context.Rentals.Find<Rental>(r => true).ToListAsync();
+            return View(rentalList);
 
-            using (var cursor = await Context.Rentals.FindAsync<Rental>(filter))
-            {
+            //List<Rental> rentals = new List<Rental>();
+            //var filter = new BsonDocument();
 
-                while (await cursor.MoveNextAsync())
-                {
-                    var batch = cursor.Current;
-                    foreach (var document in batch)
-                    {
-                        rentals.Add(document);
-                    }
-                }
-            }
-            return View(rentals);
+            //using (var cursor = await Context.Rentals.FindAsync<Rental>(filter))
+            //{
+
+            //    while (await cursor.MoveNextAsync())
+            //    {
+            //        var batch = cursor.Current;
+            //        foreach (var document in batch)
+            //        {
+            //            rentals.Add(document);
+            //        }
+            //    }
+            //}
+            //return View(rentals);
         }
 
         public ActionResult Post()
