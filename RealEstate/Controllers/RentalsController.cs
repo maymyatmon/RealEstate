@@ -80,5 +80,11 @@ namespace RealEstate.Controllers
             var rental = await Context.Rentals.Find(r => r.Id == id).FirstOrDefaultAsync();
             return rental;
         }
+
+        public async Task<ActionResult> Delete(string id)
+        {
+            await Context.Rentals.DeleteOneAsync(r => r.Id == id);
+            return RedirectToAction("index");
+        }
     }
 }
