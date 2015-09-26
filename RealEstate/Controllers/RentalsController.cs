@@ -58,9 +58,20 @@ namespace RealEstate.Controllers
         public async Task<ActionResult> AdjustPrice(string id, AdjustPrice adjustPrice)
         {
             var rental = await GetRental(id);
+            /*
             rental.AdjustPrice(adjustPrice);
 
             await Context.Rentals.ReplaceOneAsync<Rental>(r => r.Id == id, rental);
+            */
+
+            //****************Update document partially ***********************************/
+            var adjustment = new PriceAdjustment(adjustPrice, rental.Price);
+            
+            var update = Builders<Rental>.Update.Set(r => r.Price, adjustPrice.NewPrice)
+                                                .Push(r => r.Adjustments, adjustment);
+            await Context.Rentals.UpdateOneAsync<Rental>(r => r.Id == id, update);
+            /******************************************************************************/
+
             return RedirectToAction("index");
         }
 
