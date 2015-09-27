@@ -19,7 +19,8 @@ namespace RealEstate.Controllers
         {
             //var searchFilter = Builders<Rental>.Filter.Gte(r => r.Price, 10000);
             //List<Rental> rentalList = await Context.Rentals.Find<Rental>(searchFilter).ToListAsync();
-            List<Rental> rentalList = await Context.Rentals.Find<Rental>(r => true).ToListAsync();
+            var sortDefinition = Builders<Rental>.Sort.Ascending(r => r.Price);
+            List<Rental> rentalList = await Context.Rentals.Find<Rental>(r => true).Skip(0).Sort(sortDefinition).ToListAsync();
             return View(rentalList);
 
             //List<Rental> rentals = new List<Rental>();
